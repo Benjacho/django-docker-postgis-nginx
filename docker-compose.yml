@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=rscnadbaddef@a=s^3knxnbrepbh420*ir#se(g(-x37u^_p+f
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=spaceag_django_dev
+      - SQL_USER=spaceag_django
+      - SQL_PASSWORD=spaceag_django
+      - SQL_HOST=db
+      - SQL_PORT=5432
+      - DATABASE=postgres
+    depends_on: 
+      - db
+  db:
+    image: mdillon/postgis:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports: 
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=spaceag_django
+      - POSTGRES_PASSWORD=spaceag_django
+      - POSTGRES_DB=spaceag_django_dev
+volumes:
+  postgres_data:
